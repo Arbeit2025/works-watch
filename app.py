@@ -84,6 +84,8 @@ def classify(code: int | None, error: str | None) -> str:
         return "到達不可"
     if 200 <= code < 400:
         return "OK"
+    if code in (502, 503):
+        return "起動中かも"
     return "異常"
 
 
@@ -176,7 +178,7 @@ PAGE = """<!doctype html>
       </tr>
       {% endfor %}
     </table>
-    <div class="note">OK = 2xx・3xx ／ 異常 = それ以外のコード ／ 到達不可 = タイムアウト・接続エラー（Render Free のスリープの可能性あり）</div>
+    <div class="note">OK = 2xx・3xx ／ 起動中かも = 502・503（Render Free のスリープ復帰中によく出ます。1分ほど待って再チェックを） ／ 異常 = それ以外のコード ／ 到達不可 = タイムアウト・接続エラー</div>
   </div>
   {% endif %}
 </body>

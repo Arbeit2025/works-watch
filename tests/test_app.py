@@ -47,6 +47,10 @@ class TestClassify(unittest.TestCase):
     def test_unreachable_on_error(self):
         self.assertEqual(mod.classify(None, "URLError: timed out"), "到達不可")
 
+    def test_waking_502_503(self):
+        self.assertEqual(mod.classify(502, None), "起動中かも")
+        self.assertEqual(mod.classify(503, None), "起動中かも")
+
 
 class TestCheckFunctions(unittest.TestCase):
     def test_targets_count(self):
@@ -70,7 +74,7 @@ class TestCheckFunctions(unittest.TestCase):
         mapping[mod.TARGETS[0][1]] = (503, 20, None)
         mapping[mod.TARGETS[1][1]] = (None, 30000, "URLError: timed out")
         results = mod.run_checks(fetcher=fake_fetcher_factory(mapping))
-        self.assertEqual(results[0]["status"], "異常")
+        self.assertEqual(results[0]["status"], "起動中かも")
         self.assertEqual(results[1]["status"], "到達不可")
         self.assertIsNone(results[1]["code"])
 
